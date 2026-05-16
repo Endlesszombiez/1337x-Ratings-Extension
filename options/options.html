@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>1337x OMDb Ratings Settings</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="settings-shell">
+      <section class="settings-panel">
+        <header>
+          <p class="eyebrow">1337x OMDb Ratings</p>
+          <h1>Settings</h1>
+        </header>
+
+        <form id="settings-form">
+          <label class="field">
+            <span>OMDb API Key</span>
+            <input id="api-key" name="apiKey" type="password" autocomplete="off" placeholder="Paste your OMDb API key">
+          </label>
+
+          <label class="field">
+            <span>Cache retention</span>
+            <div class="inline-field">
+              <input id="cache-days" name="cacheDays" type="number" min="1" step="1">
+              <span>days</span>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Ratings to show</span>
+            <select id="rating-display" name="ratingDisplay">
+              <option value="both">IMDb and Rotten Tomatoes</option>
+              <option value="imdb">IMDb only</option>
+              <option value="rottenTomatoes">Rotten Tomatoes only</option>
+            </select>
+          </label>
+
+          <div class="actions">
+            <button type="submit">Save settings</button>
+            <button id="clear-cache" type="button" class="secondary">Clear cache</button>
+          </div>
+
+          <p id="status" class="status" role="status"></p>
+        </form>
+      </section>
+
+      <section class="settings-panel cache-panel">
+        <header class="section-header">
+          <div>
+            <p class="eyebrow">Stored lookups</p>
+            <h2>Cached items</h2>
+          </div>
+          <span id="cache-count" class="cache-count">0</span>
+        </header>
+
+        <div class="storage-summary" aria-label="Cache storage summary">
+          <div>
+            <span class="summary-value" id="cache-record-count">0</span>
+            <span class="summary-label">records saved</span>
+          </div>
+          <div>
+            <span class="summary-value" id="cache-storage-size">0 B</span>
+            <span class="summary-label">storage used</span>
+          </div>
+        </div>
+
+        <label class="field">
+          <span>Search cache</span>
+          <input id="cache-search" type="search" placeholder="Search title, year, IMDb, Rotten Tomatoes">
+        </label>
+
+        <div id="cache-list" class="cache-list"></div>
+      </section>
+    </main>
+
+    <script src="../src/defaults.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+.omdb-ratings-column {
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+.omdb-rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 5px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  vertical-align: middle;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.24);
+}
+
+.omdb-rating-label {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.omdb-rating-value {
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.omdb-rating-badge-imdb {
+  background: #f5c518;
+  color: #111;
+}
+
+.omdb-rating-badge-imdb .omdb-rating-value {
+  color: #111;
+}
+
+.omdb-rating-badge-rt {
+  background: #d71920;
+  color: #fff;
+}
+
+.omdb-rating-badge-rt .omdb-rating-value {
+  color: #fff;
+}
+
+.omdb-ratings-skipped {
+  opacity: 0.45;
+}
