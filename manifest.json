@@ -52,6 +52,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "1337x-omdb-ratings@example.com",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      },
       "strict_min_version": "109.0"
     }
   }
