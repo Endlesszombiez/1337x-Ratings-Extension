@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "1337x OMDb Ratings",
   "description": "Adds IMDb and Rotten Tomatoes ratings to 1337x torrent tables using OMDb.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "permissions": [
     "storage",
     "https://www.omdbapi.com/*",
@@ -57,7 +57,7 @@
           "none"
         ]
       },
-      "strict_min_version": "109.0"
+      "strict_min_version": "140.0"
     }
   }
 }
