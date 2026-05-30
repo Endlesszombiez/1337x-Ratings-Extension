@@ -127,7 +127,7 @@
         state: "found",
         title: data.Title || query.title,
         year: data.Year || query.year || "",
-        imdb: valueOrEmpty(data.imdbRating),
+        imdb: valueOrNotAvailable(data.imdbRating),
         rottenTomatoes: getSourceRating(data.Ratings, "Rotten Tomatoes")
       };
     } catch (error) {
@@ -148,11 +148,11 @@
       ? ratings.find((rating) => rating.Source === source)
       : null;
 
-    return valueOrEmpty(match && match.Value);
+    return valueOrNotAvailable(match && match.Value);
   }
 
-  function valueOrEmpty(value) {
-    return value && value !== "N/A" ? value : "";
+  function valueOrNotAvailable(value) {
+    return value && value !== "N/A" ? value : "N/A";
   }
 
   function scrubApiKey(url) {

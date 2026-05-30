@@ -9,6 +9,7 @@
   const DEBUG_PREFIX = "[1337x OMDb Ratings]";
 
   let latestSettings = null;
+  let injectTimer = null;
 
   init();
 
@@ -20,8 +21,9 @@
       ratingDisplay: latestSettings.ratingDisplay
     });
 
-    injectRatings();
+    scheduleInjectRatings();
     observeTableChanges();
+    observePageReentry();
 
     browser.storage.onChanged.addListener(async (changes, areaName) => {
       if (areaName !== "local") {
@@ -37,17 +39,38 @@
         });
 
         resetInjectedRatings();
-        injectRatings();
+        scheduleInjectRatings();
       }
     });
   }
 
   function observeTableChanges() {
-    const observer = new MutationObserver(() => injectRatings());
+    const observer = new MutationObserver(() => scheduleInjectRatings());
     observer.observe(document.body, {
       childList: true,
       subtree: true
     });
+  }
+
+  function observePageReentry() {
+    window.addEventListener("pageshow", () => scheduleInjectRatings());
+    window.addEventListener("focus", () => scheduleInjectRatings());
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        scheduleInjectRatings();
+      }
+    });
+  }
+
+  function scheduleInjectRatings() {
+    if (injectTimer !== null) {
+      return;
+    }
+
+    injectTimer = window.setTimeout(() => {
+      injectTimer = null;
+      injectRatings();
+    }, 50);
   }
 
   function resetInjectedRatings() {
@@ -94,8 +117,16 @@
   }
 
   async function processRow(row) {
-    if (row.matches("thead tr") || row.hasAttribute(PROCESSED_ROW_ATTRIBUTE)) {
+    if (row.matches("thead tr")) {
       return;
+    }
+
+    if (row.hasAttribute(PROCESSED_ROW_ATTRIBUTE)) {
+      if (row.querySelector(`td.${RATING_COLUMN_CLASS}`)) {
+        return;
+      }
+
+      row.removeAttribute(PROCESSED_ROW_ATTRIBUTE);
     }
 
     const titleLink = row.querySelector('a[href^="/torrent/"], a[href*="/torrent/"]');
