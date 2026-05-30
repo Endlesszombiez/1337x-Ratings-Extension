@@ -12,7 +12,7 @@
   const cacheCountElement = document.querySelector("#cache-count");
   const cacheRecordCountElement = document.querySelector("#cache-record-count");
   const cacheStorageSizeElement = document.querySelector("#cache-storage-size");
-  const { CACHE_STORAGE_KEY, getSettings, normalizeCacheDays } = window.RatingsExtensionDefaults;
+  const { CACHE_STORAGE_KEY, getSettings, saveSettings, normalizeCacheDays } = window.RatingsExtensionDefaults;
   let cacheItems = [];
   let cacheStorageBytes = 0;
 
@@ -29,7 +29,7 @@
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    await browser.storage.local.set({
+    await saveSettings({
       apiKey: apiKeyInput.value.trim(),
       cacheDays: normalizeCacheDays(cacheDaysInput.value),
       ratingDisplay: ratingDisplayInput.value
@@ -66,6 +66,7 @@
         cacheKey,
         query: item.query || queryFromCacheKey(cacheKey),
         payload: item.payload || {},
+        cachedAt: item.cachedAt || null,
         expiresAt: item.expiresAt
       }))
       .sort((first, second) => getTitle(first).localeCompare(getTitle(second)));
@@ -109,6 +110,7 @@
     meta.textContent = [
       payload.year || item.query.year || "",
       item.query.type || "",
+      item.cachedAt ? `cached ${formatDate(item.cachedAt)}` : "",
       `expires ${formatDate(item.expiresAt)}`
     ].filter(Boolean).join(" · ");
 

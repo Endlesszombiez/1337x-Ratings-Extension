@@ -26,7 +26,7 @@
     observePageReentry();
 
     browser.storage.onChanged.addListener(async (changes, areaName) => {
-      if (areaName !== "local") {
+      if (areaName !== "local" && areaName !== "sync") {
         return;
       }
 

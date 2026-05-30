@@ -47,14 +47,17 @@
     const cache = await readCache();
     const cachedValue = cache[cacheKey];
 
-    if (cachedValue && cachedValue.expiresAt > Date.now()) {
+    if (isCacheItemFresh(cachedValue)) {
       debug("Using cached OMDb result.", query, cachedValue.payload);
       return cachedValue.payload;
     }
 
     const payload = await fetchRatings(query, settings.apiKey);
+    const cachedAt = Date.now();
+
     cache[cacheKey] = {
-      expiresAt: Date.now() + settings.cacheDays * 24 * 60 * 60 * 1000,
+      cachedAt,
+      expiresAt: getExpiresAt(cachedAt, settings.cacheDays),
       query,
       payload
     };
@@ -73,9 +76,36 @@
 
   function pruneCache(cache) {
     const now = Date.now();
-    return Object.fromEntries(
-      Object.entries(cache).filter(([, value]) => value && value.expiresAt > now)
-    );
+    const prunedCache = {};
+
+    Object.entries(cache).forEach(([cacheKey, value]) => {
+      const cacheItem = normalizeCacheItem(value);
+
+      if (cacheItem && cacheItem.expiresAt > now) {
+        prunedCache[cacheKey] = cacheItem;
+      }
+    });
+
+    return prunedCache;
+  }
+
+  function normalizeCacheItem(value) {
+    if (!value || !value.expiresAt) {
+      return null;
+    }
+
+    return {
+      ...value
+    };
+  }
+
+  function isCacheItemFresh(value) {
+    const cacheItem = normalizeCacheItem(value);
+    return Boolean(cacheItem && cacheItem.expiresAt > Date.now());
+  }
+
+  function getExpiresAt(cachedAt, cacheDays) {
+    return cachedAt + cacheDays * 24 * 60 * 60 * 1000;
   }
 
   async function fetchRatings(query, apiKey) {
